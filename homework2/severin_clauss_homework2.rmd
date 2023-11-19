@@ -1,10 +1,12 @@
 ---
 title: "Homework 2 - Data analysis & visualization of the Bitcoin price"
 author: "Severin Clauss"
+date: Nov. 19, 2023
 output:
     html_document:
         df_print: paged
         HTML: default
+        toc: true
     pdf_document: default
 ---
 
@@ -27,6 +29,10 @@ if (basename(getwd()) != "homework2") {
 dataImprot <- read_csv('./exchanges.csv')
 data <- dataImprot
 ```
+
+Check out on [GitHub](https://github.com/HaKePlan/bfh-sbd2/blob/main/homework2/severin_clauss_homework2.rmd)
+
+***
 
 # Exercise 1
 *Using the object "data" (exchanges.csv), run basic descriptive statistics and answer the below questions:*
@@ -79,6 +85,8 @@ apply(data[, sapply(data, is.numeric)], 2, function(x) diff(range(x)))
 ```
 
 As the result shows, `btc_coinbase` has the largest and `usdeur` smallest variation.
+
+***
 
 # Exercise 2
 *In the next step, we want to carry out some data manipulation. Specifically:*
@@ -139,6 +147,8 @@ coinbase_kraken_diff <- data |>
 print(paste('The biggest difference (', coinbase_kraken_diff$difference_coinbase_kraken, ') occured at', coinbase_kraken_diff$Date))
 ```
 
+***
+
 # Exercise 3
 *In the next step, we want to investigate the trend of the Bitcoin price.*
 
@@ -181,6 +191,8 @@ ggplot(data = data, aes(x = btc_coinbase)) +
 - First, we can see that bitcoin had a huge price climb in the second half of 2017 but fell afterward. In total, the price per bitcoin could increase quite a bit from 2016 to 2018.
 - The histogram shows us clearly that the observation counted the most prices per day in the lower segment, which is also validated by the "Trend of the Bitcoin Price" diagram. There was only a short period of time when the price was high. The bitcoin price started to rise significantly only in the last third of the observation.
 - The box plot combined the findings of the previous two plots. As shown in the line plot, the time when bitcoin was at its highest was super short, hence the outliers. As shown in the histogram, most of the time during the observation period, bitcoin was at a lower price, hence the low mean.
+
+***
 
 # Exercise 4
 *In the next step, we want to investigate the relationship between the price of Bitcoin and that of traditional assets.*
@@ -247,19 +259,24 @@ The summary alone is not enough to check the validity of this model. We should d
 avPlots(model)
 ```
 
+***
+
 # Exercise 5
 *In the next step, we want to employ graphs to visualize the correlations identified.*
 
+### The correlation matrix - object
 *Define an object corr that would contain the correlations between all numeric data in the data set.*
 ```{r}
 cor_matrix <- cor(data[-1])
 ```
 
+### The correlation matrix - Plot
 *Using the ggcorrplot function, visualize the lower half of the correlation matrix also specifying the method = "circle".*
 ```{r}
 ggcorrplot(cor_matrix, type = "lower", outline.col = "white", method = "circle", title = 'Correlation of the bitcoin dataset')
 ```
 
+### The correlation matrix - heatmap
 *Create a heatmap using plotly of the correlations that emerge between the numeric variables included in the dataset.*
 ```{r}
 plot_ly(
@@ -272,7 +289,10 @@ plot_ly(
   layout(title = "Correlation Heatmap of the bitcoin dataset")
 ```
 
+***
+
 # Exercise 6
+### Relation between bitcoin and traditional assets
 *Having done the analysis - what can you conclude about the relationship between the Bitcoin price and traditional assets?*
 
 Bitcoin shows an inverse relationship with traditional currencies (`usdyuan` and `usdeur`) indicating that as Bitcoin prices rise, traditional currencies decline.
@@ -282,3 +302,10 @@ Bitcoin shares a moderately positive correlation with the traditional assets lik
 The most pronounced correlation occurs between bitcoin and the SP500 index. This implies that Bitcoin prices and the performance of the SP500 tend to move closely together, suggesting a potential connection to broader market sentiment or macroeconomic factors.
 
 The inverse correlation with traditional currencies implies a potential role for Bitcoin as a hedge. While Bitcoin shows some positive correlation with gold and oil, its strongest link appears to be with the S&P 500, indicating a noteworthy connection to broader market dynamics.
+
+***
+
+```{r}
+# end the report with session info
+sessionInfo()
+```
