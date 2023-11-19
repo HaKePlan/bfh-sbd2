@@ -72,7 +72,7 @@ bp_bf17 <- ggplot(data = before_2017, aes(x = btc_coinbase)) +
     outlier.color = "black",
     outlier.size  = 3,
     fill='skyblue') +
-  labs(title = 'Bitcoin price before 2017', subtitle = 'from 18.05.2016 to 31.12.2016', x = 'Price coinbase', y = '') +
+  labs(title = 'Bitcoin price before 2017', subtitle = 'from 18.05.2016 to 31.12.2016', x = 'Bitcoin price in dollars', y = '') +
   theme(legend.position = "none", axis.text.y = element_blank())
 
 bp_af17 <- ggplot(data = after_2017, aes(x = btc_coinbase)) +
@@ -82,7 +82,7 @@ bp_af17 <- ggplot(data = after_2017, aes(x = btc_coinbase)) +
     outlier.color = "black",
     outlier.size  = 3,
     fill='skyblue') +
-  labs(title = 'Bitcoin price after 2017', subtitle = 'from 01.01.2018 to 30.04.2018', x = 'Price coinbase', y = '') +
+  labs(title = 'Bitcoin price after 2017', subtitle = 'from 01.01.2018 to 30.04.2018', x = 'Bitcoin price in dollars', y = '') +
   theme(legend.position = "none", axis.text.y = element_blank())
 
 # add a annotation to show the mean in the plot
@@ -104,3 +104,30 @@ coinbase_kraken_diff <- data |>
 print(paste('The biggest difference (', coinbase_kraken_diff$difference_coinbase_kraken, ') on the', coinbase_kraken_diff$Date))
 
 # EXERCISE 3
+# In the next step, we want to investigate the trend of the Bitcoin price.
+
+# Using ggplot, create a line plot of the Bitcoin price (exchange: coinbase). Make sure to include a title and labels on the X and Y axis (Title = "The trend of the Bitcoin Price", x = "Date", y = "Bitcoin price in dollars").
+ggplot(data = data, aes(y = btc_coinbase, x = Date)) +
+  geom_line(color = "blue") +
+  labs(title = "The trend of the Bitcoin Price", subtitle = 'from 18.05.2016 to 30.04.2018', x = "Date", y = "Bitcoin price in dollars") +
+  theme(axis.text.x = element_text(angle=60, hjust=1))
+
+# Using ggplot, plot a histogram of the Bitcoin price. Include the appropriate labels.
+ggplot(data = data, aes(x = btc_coinbase)) +
+  geom_histogram(fill = "skyblue", color = 'blue', bins = 20) +
+  labs(title = "Distribution of the bitcoin prcie", subtitle = 'from 18.05.2016 to 30.04.2018', x = "Bitcoin price in dollars", y = "Counts") +
+  theme(axis.text.x = element_text(angle=60, hjust=1))
+
+# Using ggplot, plot a box plot of the Bitcoin price. Include the appropriate labels.
+ggplot(data = data, aes(x = btc_coinbase)) +
+  geom_boxplot(
+    size = 1,
+    outlier.shape = 1,
+    outlier.color = "black",
+    outlier.size  = 3,
+    fill='skyblue') +
+  labs(title = 'Distribution of the bitcoin prcie', subtitle = 'from 18.05.2016 to 30.04.2018', x = 'Bitcoin price in dollars', y = '') +
+  theme(legend.position = "none", axis.text.y = element_blank()) +
+  annotate("text", x = max(data$btc_coinbase), y = -0.3, label = paste("Mean =", round(mean(data$btc_coinbase), 2)), vjust = -1, hjust = 1, color = 'red')
+
+# What can you tell about the price of the Bitcoin over the observed period?
