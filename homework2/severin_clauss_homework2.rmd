@@ -10,7 +10,7 @@ output:
 
 ```{r include = FALSE, echo = FALSE}
 # Install libraries needed
-libraries <- c('readr', 'dlookr', 'dplyr', 'patchwork', 'ggplot2')
+libraries <- c('readr', 'dlookr', 'dplyr', 'patchwork', 'ggplot2', 'plotly', 'car', 'ggcorrplot')
 
 lapply(libraries, function(x) if (!(x %in% installed.packages())) {
   install.packages(x)
@@ -29,7 +29,7 @@ data <- dataImprot
 ```
 
 # Exercise 1
-Using the object "data" (exchanges.csv), run basic descriptive statistics and answer the below questions:
+*Using the object "data" (exchanges.csv), run basic descriptive statistics and answer the below questions:*
 
 ### What period does that data cover?
 ```{r}
@@ -64,14 +64,16 @@ boxplot(data[, sapply(data, is.numeric)])
 As shown by `diagnose` there are none missing values. Also for the uniqueness of the values it is looking good. there are not much duplicated values.
 The boxplot shows us that there are quite lots of outliers in the upper region for the `btc` variables. Also interesting is the distribution of the variables `usdyuan`, `usdeur`, `gold`, `gold`, `oil`, and `sp500`. This could be explained with the price stability of the specific goods / currencies.
 
-### What are the mean and median of the numerical variables included?
+### Mean and median
+*What are the mean and median of the numerical variables included?*
 ```{r}
 summary(data)
 ```
 
 In the result of `summary` we can see the mean and median of each numerical variable. Note, that Date is not a numerical variable and has therefore no mean and median.
 
-### Which variable has the largest variation in the observed period? Which variable has the smallest variation in the observed period?
+### Variation
+Which variable has the largest variation in the observed period? Which variable has the smallest variation in the observed period?*
 ```{r}
 apply(data[, sapply(data, is.numeric)], 2, function(x) diff(range(x)))
 ```
@@ -79,10 +81,10 @@ apply(data[, sapply(data, is.numeric)], 2, function(x) diff(range(x)))
 As the result shows, `btc_coinbase` has the largest and `usdeur` smallest variation.
 
 # Exercise 2
-In the next step, we want to carry out some data manipulation. Specifically:
+*In the next step, we want to carry out some data manipulation. Specifically:*
 
 ### Mean before and after 2017
-Create a binary variable that will contain the value "Before" if the observation is before the year 2017; and "After" if the observation is after 2017. What is the mean price of the Bitcoin cryptocurrency (exchange: coinbase) for the period before and after 2017?
+*Create a binary variable that will contain the value "Before" if the observation is before the year 2017; and "After" if the observation is after 2017. What is the mean price of the Bitcoin cryptocurrency (exchange: coinbase) for the period before and after 2017?*
 ```{r fig.width=20, fig.height=10}
 # filter data (dplyr package) and put it in two sets.
 # We exclude 2017 since it seems not to be cosidert in the task description (before and after 2017)
@@ -123,7 +125,7 @@ result_bp_bf17 + result_bp_af17
 ```
 
 ### Biggest difference between coinbase and kraken
-Create a column titled "Difference" that will contain the difference between the Bitcoin price traded on the Coinbase and the Kraken exchange. On what day was the difference largest?
+*Create a column titled "Difference" that will contain the difference between the Bitcoin price traded on the Coinbase and the Kraken exchange. On what day was the difference largest?*
 ```{r}
 # mutate and arrange data to get the collumn with the biggest difference (use library dplyr as learnd in bfh-empr module)
 coinbase_kraken_diff <- data |>
@@ -138,10 +140,10 @@ print(paste('The biggest difference (', coinbase_kraken_diff$difference_coinbase
 ```
 
 # Exercise 3
-In the next step, we want to investigate the trend of the Bitcoin price.
+*In the next step, we want to investigate the trend of the Bitcoin price.*
 
 ### Line plot
-Using ggplot, create a line plot of the Bitcoin price (exchange: coinbase).
+*Using ggplot, create a line plot of the Bitcoin price (exchange: coinbase).*
 ```{r}
 ggplot(data = data, aes(y = btc_coinbase, x = Date)) +
   geom_line(color = "blue") +
@@ -150,7 +152,7 @@ ggplot(data = data, aes(y = btc_coinbase, x = Date)) +
 ```
 
 ### Histogram
-Using ggplot, plot a histogram of the Bitcoin price. Include the appropriate labels.
+*Using ggplot, plot a histogram of the Bitcoin price. Include the appropriate labels.*
 ```{r}
 ggplot(data = data, aes(x = btc_coinbase)) +
   geom_histogram(fill = "skyblue", color = 'blue', bins = 20) +
@@ -159,7 +161,7 @@ ggplot(data = data, aes(x = btc_coinbase)) +
 ```
 
 ### Box plot
-Using ggplot, plot a box plot of the Bitcoin price. Include the appropriate labels.
+*Using ggplot, plot a box plot of the Bitcoin price. Include the appropriate labels.*
 ```{r}
 ggplot(data = data, aes(x = btc_coinbase)) +
   geom_boxplot(
@@ -174,8 +176,102 @@ ggplot(data = data, aes(x = btc_coinbase)) +
 ```
 
 ### Conclusion
-What can you tell about the price of the Bitcoin over the observed period?
+*What can you tell about the price of the Bitcoin over the observed period?*
 
 - First, we can see that bitcoin had a huge price climb in the second half of 2017 but fell afterward. In total, the price per bitcoin could increase quite a bit from 2016 to 2018.
 - The histogram shows us clearly that the observation counted the most prices per day in the lower segment, which is also validated by the "Trend of the Bitcoin Price" diagram. There was only a short period of time when the price was high. The bitcoin price started to rise significantly only in the last third of the observation.
 - The box plot combined the findings of the previous two plots. As shown in the line plot, the time when bitcoin was at its highest was super short, hence the outliers. As shown in the histogram, most of the time during the observation period, bitcoin was at a lower price, hence the low mean.
+
+# Exercise 4
+*In the next step, we want to investigate the relationship between the price of Bitcoin and that of traditional assets.*
+
+### Dependency between bitcoin and oil
+*Create a graph to show the dependence between the Bitcoin price and the price of oil and plot a line.
+What can you tell about the dependency between these two assets?*
+```{r}
+ggplot(data = data, aes(x = oil, y = btc_coinbase)) +
+  geom_point(color = 'skyblue') +
+  geom_smooth(method = "lm", se = FALSE, color = 'blue') +
+  labs(title = "Bitcoin Price vs. Oil Price",
+       x = "Oil Price",
+       y = "Bitcoin Price")
+```
+
+Oil price seems to correlate with the bitcoin price.
+In the plot we can see the pattern of a positive correlation.
+To get a better understanding of the correlation, we would have to investigate much deeper.
+
+
+### Dependency between bitcoin and gold
+*Create a graph to show the dependence between the Bitcoin price and the price of gold.
+What can you tell about the dependency between these two assets?*
+```{r}
+viz <- ggplot(data = data, aes(x = gold, y = btc_coinbase)) +
+  geom_point(color = 'skyblue') +
+  geom_smooth(method = "lm", se = FALSE, color = 'blue') +
+  labs(title = "Bitcoin Price vs. Gold Price",
+       x = "Gold Price",
+       y = "Bitcoin Price")
+
+viz
+```
+
+Similar to the dependency between oil and bitcoin, gold and bitcoin seem to have a positive correlation.
+Also, this correlation needs to be investigated deeper to make a qualified conclusion.
+
+*Using plotly, create a dynamic plot of the graph defined in the previous step.*
+```{r}
+ggplotly(viz)
+```
+
+### Bitcoin price prediction
+*Fit a multiple regression model where you try to predict the Bitcoin price, (exchange = coinbase) by using the price of oil, gold and the SP500.
+Print the summary of the model and explain the results.*
+```{r}
+model <- lm(btc_coinbase~oil+gold+sp500, data)
+summary(model)
+```
+In the summary, we can see the following things about this model:
+- The R-squared is 0.75; this means the model explains the bitcoin price with a 75% accuracy
+- oil is the less significant variable of our model, it has a negative correlation with the bitcoin price. In the model before, it had in the regression a positive correlation.
+- Standard error: 2157 $. 95% of the bitcoin prices will be between ± 2 * 2157
+- With the values from `Estimate` we can come up with the formula for our price predictions
+  - `-44477.56 $ + -72.72 $/oil * $ oil + 8.09 $/gold * $ gold + 17.37 $/sp500 * $ sp500`
+  - Let's say our observation has the following prices: 48 $ Oil, 1258 $ Gold, 2047 $ sp500 then our prediction for the bitcoin price would be: `btc ± 2 * 2157 = -44477.56 $ + -72.72 $/oil * 48 + 8.09 $/gold * 1258 + 17.37 $/sp500 * 2047 = -12403.64`
+
+The summary alone is not enough to check the validity of this model. We should do more checks to validate the model.
+
+
+*Plot the multiple regression model with the avPlots() function.*
+```{r}
+avPlots(model)
+```
+
+# Exercise 5
+*In the next step, we want to employ graphs to visualize the correlations identified.*
+
+*Define an object corr that would contain the correlations between all numeric data in the data set.*
+```{r}
+cor_matrix <- cor(data[-1])
+```
+
+*Using the ggcorrplot function, visualize the lower half of the correlation matrix also specifying the method = "circle".*
+```{r}
+ggcorrplot(cor_matrix, type = "lower", outline.col = "white", method = "circle", title = 'Correlation of the bitcoin dataset')
+```
+
+*Create a heatmap using plotly of the correlations that emerge between the numeric variables included in the dataset.*
+```{r}
+plot_ly(
+  z = cor_matrix,
+  x = colnames(cor_matrix),
+  y = colnames(cor_matrix),
+  colorscale = "Viridis",
+  type = "heatmap"
+) %>%
+  layout(title = "Correlation Heatmap of the bitcoin dataset")
+```
+
+# Exercise 6
+*Having done the analysis - what can you conclude about the relationship between the Bitcoin price and traditional assets?*
+

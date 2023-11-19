@@ -1,9 +1,11 @@
 library(readr)
 library(dlookr)
-# library(tidyverse)
 library(dplyr)
 library(patchwork)
 library(ggplot2)
+library(plotly)
+library(car)
+library(ggcorrplot)
 
 setwd('./homework2')
 getwd()
@@ -131,3 +133,64 @@ ggplot(data = data, aes(x = btc_coinbase)) +
   annotate("text", x = max(data$btc_coinbase), y = -0.3, label = paste("Mean =", round(mean(data$btc_coinbase), 2)), vjust = -1, hjust = 1, color = 'red')
 
 # What can you tell about the price of the Bitcoin over the observed period?
+# ...
+
+# EXERCISE 4
+# In the next step, we want to investigate the relationship between the price of Bitcoin and that of traditional assets.
+
+# Create a graph to show the dependence between the Bitcoin price and the price of oil and plot a line (Hint: smooth method "lm"). What can you tell about the dependency between these two assets?
+summary(lm(btc_coinbase~oil, data))
+summary(lm(oil~btc_coinbase, data))
+cor(data[-1])
+
+ggplot(data = data, aes(x = oil, y = btc_coinbase)) +
+  geom_point(color = 'skyblue') +
+  geom_smooth(method = "lm", se = FALSE, color = 'blue') +
+  labs(title = "Bitcoin Price vs. Oil Price",
+       x = "Oil Price",
+       y = "Bitcoin Price")
+
+# Create a graph to show the dependence between the Bitcoin price and the price of gold.
+# What can you tell about the dependency between these two assets?
+viz <- ggplot(data = data, aes(x = gold, y = btc_coinbase)) +
+  geom_point(color = 'skyblue') +
+  geom_smooth(method = "lm", se = FALSE, color = 'blue') +
+  labs(title = "Bitcoin Price vs. Gold Price",
+       x = "Gold Price",
+       y = "Bitcoin Price")
+
+viz
+
+
+# Using plotly, create a dynamic plot of the graph deﬁned in the previous step.
+ggplotly(viz)
+
+# Fit a multiple regression model where you try to predict the Bitcoin price (exchange = coinbase) by using the price of oil, gold and the SP500. Print the summary of the model and explain the results.
+model <- lm(btc_coinbase~oil+gold+sp500, data)
+summary(model)
+coef(model)
+
+# Plot the multiple regression model with the avPlots() function.
+avPlots(model)
+
+# EXERCISE 5)
+# In the next step, we want to employ graphs to visualize the correlations identiﬁed.
+
+# Deﬁne an object corr that would contain the correlations between all numeric data in the data set.
+cor_matrix <- cor(data[-1])
+
+# Using the ggcorrplot function, visualize the lower half of the correlation matrix also specifying the method = "circle".
+ggcorrplot(cor_matrix, type = "lower", outline.col = "white", method = "circle", title = 'Correlation of the bitcoin dataset')
+
+# Create a heatmap using plotly of the correlations that emerge between the numeric variables included in the dataset.
+plot_ly(
+  z = cor_matrix,
+  x = colnames(cor_matrix),
+  y = colnames(cor_matrix),
+  colorscale = "Viridis",
+  type = "heatmap"
+) %>%
+  layout(title = "Correlation Heatmap of the bitcoin dataset")
+
+# EXERCISE 6)
+# Having done the analysis - what can you conclude about the relationship between the Bitcoin price and traditional assets?
