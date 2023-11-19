@@ -235,7 +235,7 @@ In the summary, we can see the following things about this model:
 - The R-squared is 0.75; this means the model explains the bitcoin price with a 75% accuracy
 - oil is the less significant variable of our model, it has a negative correlation with the bitcoin price. In the model before, it had in the regression a positive correlation.
 - Standard error: 2157 $. 95% of the bitcoin prices will be between ± 2 * 2157
-- With the values from `Estimate` we can come up with the formula for our price predictions
+- With the values from `Estimate` we can come up with the formula for our price predictions (thanks to previous modules like wdda)
   - `-44477.56 $ + -72.72 $/oil * $ oil + 8.09 $/gold * $ gold + 17.37 $/sp500 * $ sp500`
   - Let's say our observation has the following prices: 48 $ Oil, 1258 $ Gold, 2047 $ sp500 then our prediction for the bitcoin price would be: `btc ± 2 * 2157 = -44477.56 $ + -72.72 $/oil * 48 + 8.09 $/gold * 1258 + 17.37 $/sp500 * 2047 = -12403.64`
 
@@ -275,3 +275,10 @@ plot_ly(
 # Exercise 6
 *Having done the analysis - what can you conclude about the relationship between the Bitcoin price and traditional assets?*
 
+Bitcoin shows an inverse relationship with traditional currencies (`usdyuan` and `usdeur`) indicating that as Bitcoin prices rise, traditional currencies decline.
+
+Bitcoin shares a moderately positive correlation with the traditional assets like gold and oil. This could imply that the influential factors of bitcoin differ from the factors of gold and oil.
+
+The most pronounced correlation occurs between bitcoin and the SP500 index. This implies that Bitcoin prices and the performance of the SP500 tend to move closely together, suggesting a potential connection to broader market sentiment or macroeconomic factors.
+
+The inverse correlation with traditional currencies implies a potential role for Bitcoin as a hedge. While Bitcoin shows some positive correlation with gold and oil, its strongest link appears to be with the S&P 500, indicating a noteworthy connection to broader market dynamics.
