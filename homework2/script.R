@@ -145,7 +145,7 @@ cor(data[-1])
 
 ggplot(data = data, aes(x = oil, y = btc_coinbase)) +
   geom_point(color = 'skyblue') +
-  geom_smooth(method = "lm", se = FALSE, color = 'blue') +
+  geom_smooth(method = "lm", se = FALSE, color = 'red') +
   labs(title = "Bitcoin Price vs. Oil Price",
        x = "Oil Price",
        y = "Bitcoin Price")
