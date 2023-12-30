@@ -18,6 +18,14 @@
             </RMarkdownRenderProfile>
           </value>
         </entry>
+        <entry key="file://$PROJECT_DIR$/homework3/homework-3.rmd">
+          <value>
+            <RMarkdownRenderProfile>
+              <option name="lastOutput" value="$PROJECT_DIR$/homework3/homework-3.html" />
+              <option name="outputDirectoryUrl" value="file://$PROJECT_DIR$/homework3" />
+            </RMarkdownRenderProfile>
+          </value>
+        </entry>
       </map>
     </option>
   </component>
