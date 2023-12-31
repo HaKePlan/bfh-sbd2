@@ -190,7 +190,7 @@ for (k in 1:4){
 }
 ```
 
-In the maximum K-Core layer of each movie, movie 1 has the moste nodes where movie 2 as the least.
+In the maximum K-Core layer of each movie, movie 1 has the most nodes where movie 2 as the least.
 Even thought movie 2 seems to be complex, the story line seems to evolve around a small group of people.
 
 #### Cliques
